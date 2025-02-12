@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html class="{{mainClass}}">
+  <head>
+    <script src="./client.js"></script>
+    <script src="/utils.js"></script>
+    <title>Strawberry Web Services</title>
+    <link rel="icon" href="https://cdn.glitch.global/e26d8c22-78e4-40e9-ba1f-e1cc7c1ae3d3/e10e22d6-f70a-4bff-8363-919c36d137dd.a783e3b8397fa5c4.svg?v=1739037163919">
+    <meta property="og:title" content="Strawberry Web Services">
+    <meta property="og:description" content="Net worth calculator, ship name search, hex code search, value leaderboards and more coming soon...">
+    <meta property="og:image" content="https://cdn.glitch.global/e26d8c22-78e4-40e9-ba1f-e1cc7c1ae3d3/7f1ebdbe-2bdd-4e69-8912-55f1c26c2f11.ezgif-39bec930550f86.png?v=1739037368902" />
+    <!--{{{globalTags}}}-->
+    <style>
+      h2 {
+        text-align: center;
+      }
+      #out {
+        height: 300px;
+      }
+      #area {
+        height: 50px;
+      }
+      
+      .scrollCtn {
+        width: 90%;
+  margin: 0px auto;
+  max-height: 70vh;
+  overflow-y: auto;
+  border-radius: 10px;
+  outline: 2px solid var(--system-blue);
+      }
+      
+      .entry {
+        display: flex;
+        align-items: center;
+        margin: 0px auto;
+      }
+      
+      .entry:hover {
+        background-color: var(--system-grey2);
+      }
+      .entry img {
+        max-height: min(20vmax, 200px);  
+        border-radius: 10px;
+      }
+      
+      .entry .left {
+        flex-grow: 0;
+        padding: 5px;
+      }
+      .entry .right {
+        color: var(--system-blue);
+        flex-grow: 8;
+        text-align: left;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      .right h2 {
+        font-size: 30px;
+      }
+      
+      p, div.blu.fssml.nohover, h3 {
+        margin: 5px 0px;
+      }
+      
+      .tab {
+        display: none;
+      }
+      
+      .tab.active {
+        display: block;
+      }
+      
+      #tabctn {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-y: auto;
+        padding: 7px;
+        padding-bottom: 0px;
+        gap: 7px;
+        border-bottom: 2px solid var(--system-blue);
+      }
+      
+      #tabctn .active {
+        background-color: var(--system-blue2);
+      }
+      
+      #tabctn .tabtop {
+        text-wrap: nowrap;
+        text-decoration: none;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 5px 5px 0px 0px;
+        outline: 2px solid var(--system-blue);
+      }
+      
+      .tabtop {
+        display: inline-block;
+      }
+      
+      textarea {
+        display: block;
+        margin: 0px auto;
+      }
+      
+    </style>
+  </head>
+  <body onload="
+    globalOnload();
+    preLoad();
+    ">
+    <div class="main_content">
+      <div>
+        <h2 class="fsmed">
+          Strawberry Web Services
+        </h2>
+        <p>
+          Anything you could ever want. And prisms.
+        </p>
+      </div>
+      <div id="tabctn">
+
+      </div>
+      <div class="tab" id="networth">
+        <nav>
+        <h2 class="fsmed">Net Worth Calculator</h2>
+        <a href="https://drednot.io/shiplist?server=0" target="_blank">
+          Click here to get your shiplist 
+          <span class="material-symbols-outlined">open_in_new</span>
+        </a>
+        </nav>
+        <textarea id="area" placeholder="Paste your shiplist here..."></textarea>
+        <button onclick="calcWorth()" class="btn fsmed grn">
+          Calculate!
+          <div class="anim"></div>
+        </button>
+        <div id="resCtn" style="display: none;">
+          <div>
+            <div class="blu fssml nohover">
+              Your net worth is: <h3 id="summary" class="blu fssml nohover nowrap"></h3>
+            </div>
+            <p id="date" class="blu fssml nohover"></p>
+          </div>
+          <div id="breakdown" class="scrollCtn">
+
+          </div>
+        </div>
+      </div>
+      <div class="tab" id="shipname">
+        <h2 class="fsmed">Search for ship by ship name</h2>
+        <form action="javascript:nameSearch()" style="display: flex; align-items: baseline;">
+          <div class="inpContainer" style="flex-grow: 1; margin: 5px;">
+            <input class="inp" type="text" id="inp-shipname" placeholder="Strawberrymobile III">
+            <div class="anim inp"></div>
+          </div>
+          <button class="fssml2 btn blu">
+            <span class="material-symbols-outlined">search</span>
+            <div class="anim"></div>
+          </button>
+        </form>
+        <div id="resCtn2" style="display: none;">
+          <p class="blu fssml nohover" id="resct"></p>
+          <div class="breakdown scrollCtn">
+            
+          </div>
+        </div>
+      </div>
+      <div class="tab" id="byhex">
+        <h2 class="fsmed">Search for ship by hex code</h2>
+        <form action="javascript:hexSearch()" style="display: flex; align-items: baseline;">
+          <div class="inpContainer" style="flex-grow: 1; margin: 5px;">
+            <input class="inp" type="text" id="inp-hex" placeholder="{abcde0}" pattern="\{?[a-fA-F0-9]{4,}\}?">
+            <div class="anim inp"></div>
+          </div>
+          <button class="fssml2 btn blu">
+            <span class="material-symbols-outlined">search</span>
+            <div class="anim"></div>
+          </button>
+        </form>
+        <div id="resCtn4" style="display: none;">
+        </div>
+      </div>
+      <div class="tab" id="leaderboard">
+        <h2 class="fsmed">Ship value leaderboard</h2>
+        <div style="display: flex; align-items: baseline; width:min-content; margin: 0px auto;" >
+          <button class="fssml2 btn blu" onclick="getLeaderboard(-1)">
+            <span class="material-symbols-outlined">arrow_back_ios</span>
+            <div class="anim"></div>
+          </button>
+          <form action="javascript:getLeaderboard(0)" style="display: flex; align-items: baseline; flex-shrink: 1;">
+            <div class="inpContainer" style="flex-grow: 1; margin: 5px; min-width: 100px;">
+              <input class="inp" type="number" value="1" id="inp-page" style="height: 90px;" placeholder="Page #">
+              <div class="anim inp"></div>
+            </div>
+            <button class="fssml2 btn grn">
+              <span class="material-symbols-outlined">check</span>
+              <div class="anim"></div>
+            </button>
+          </form>
+          <button class="fssml2 btn blu" onclick="getLeaderboard(+1)">
+            <span class="material-symbols-outlined">arrow_forward_ios</span>
+            <div class="anim"></div>
+          </button>
+        </div>
+        <div id="resCtn3" style="display: none;">
+          <p class="blu fssml nohover" id="pagenum"></p>
+          <div class="breakdown scrollCtn">
+            
+          </div>
+        </div>
+      </div>
+      
+        
+    </div>
+  </body>
+</html>
