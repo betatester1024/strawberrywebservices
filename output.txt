@@ -1,0 +1,2 @@
+COMMAND=NameSearch
+o fetch, dates same! (2025-02-11, 2025_2_11)
