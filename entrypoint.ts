@@ -2,7 +2,7 @@ import { Client } from 'node-appwrite';
 
 // This is your Appwrite function
 // It's executed each time we get a request
-export default async ({ req:any, res:any, log:any, error:any }) => {
+export default async (input:any) => {
   // Why not try the Appwrite SDK?
   //
   // Set project and set API key
@@ -11,20 +11,20 @@ export default async ({ req:any, res:any, log:any, error:any }) => {
   //    .setKey(req.headers['x-appwrite-key']);
 
   // You can log messages to the console
-  log('Hello, Logs!');
+  input.log('Hello, Logs!');
 
   // If something goes wrong, log an error
-  error('Hello, Errors!');
+  input.error('Hello, Errors!');
 
   // The `req` object contains the request data
-  if (req.method === 'GET') {
+  if (input.req.method === 'GET') {
     // Send a response with the res object helpers
     // `res.text()` dispatches a string back to the client
-    return res.text('Hello, World!');
+    return input.res.text('Hello, World!');
   }
 
   // `res.json()` is a handy helper for sending JSON
-  return res.json({
+  return input.res.json({
     motto: 'Build like a team of hundreds_',
     learn: 'https://appwrite.io/docs',
     connect: 'https://appwrite.io/discord',
